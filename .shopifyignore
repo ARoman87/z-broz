@@ -1,0 +1,29 @@
+# Node dependencies
+node_modules/*
+
+# Build system files
+package.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+postcss.config.js
+tailwind.config.js
+
+# Local dev configs
+.editorconfig
+.prettierrc
+.prettierrc.json
+.prettierrc.js
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/*
+
+# Git files
+.git/*
+.gitignore
+.shopifyignore
+README.md

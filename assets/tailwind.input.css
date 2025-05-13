@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+
+
+@theme {
+  /* --color-primary: #000000;
+  --color-background: #FFFFFF; */
+}
+
+@layer base {
+  /* body {
+    @apply bg-white font-inter
+  } */
+
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 ;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+
+
+
