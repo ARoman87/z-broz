@@ -1,29 +1,26 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-
-
 @theme {
   /* --color-primary: #000000;
   --color-background: #FFFFFF; */
+  --font-pure-heart: "PureHeart", sans-serif;
+  --font-ibm: "IBM Plex Sans", sans-serif;
 }
 
 @layer base {
-  /* body {
-    @apply bg-white font-inter
-  } */
-
+  body {
+    @apply font-ibm bg-white text-5xl;
+  }
+  h1 {
+    @apply font-pure-heart;
+  }
 }
 
 .container {
-  @apply max-w-7xl mx-auto px-4 ;
+  @apply mx-auto max-w-7xl px-4;
 }
 
 html {
   scroll-behavior: smooth;
 }
-
-
-
-
-
