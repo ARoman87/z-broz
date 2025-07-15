@@ -1,13 +1,13 @@
 {
-  "name": "project-name-here",
+  "name": "z-broz",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"shopify theme dev --store=STORE_NAME_HERE -e development\" \"npx @tailwindcss/cli -i ./assets/tailwind.input.css -o ./assets/tailwind.output.css --watch\"",
+    "dev": "concurrently \"shopify theme dev --store=z.broz.myshopify.com -e development\" \"npx @tailwindcss/cli -i ./assets/tailwind.input.css -o ./assets/tailwind.output.css --watch\"",
     "build": "npx @tailwindcss/cli -i ./assets/tailwind.input.css -o ./assets/tailwind.output.css",
-    "pull": "shopify theme pull --store=STORE_NAME_HERE",
-    "push": "shopify theme push --store=STORE_NAME_HERE"
+    "pull": "shopify theme pull --store=z.broz.myshopify.com",
+    "push": "shopify theme push --store=z.broz.myshopify.com"
   },
   "keywords": [],
   "author": "",
