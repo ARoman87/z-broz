@@ -2,15 +2,15 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* --color-primary: #000000;
-  --color-background: #FFFFFF; */
+  --color-primary: #d92127;
+  --color-background: #f4f4f4;
   --font-pure-heart: "PureHeart", sans-serif;
   --font-ibm: "IBM Plex Sans", sans-serif;
 }
 
 @layer base {
   body {
-    @apply font-ibm bg-white text-5xl;
+    @apply font-ibm bg-white;
   }
   h1 {
     @apply font-pure-heart;

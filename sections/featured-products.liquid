@@ -1,0 +1,10 @@
+<div class="md:py-20 py-10 bg-background">
+  <div class="container">
+    <h2 class="text-4xl md:text-[68px] font-bold mb-10 uppercase max-w-3xl leading-tight">Find the Perfect Fit for Your Ride</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for product in collections.all.products %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
