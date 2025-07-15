@@ -1,0 +1,73 @@
+<div
+  class="md:py-40 py-20"
+>
+  <div class="container">
+    <div data-aos="fade-up" data-aos-duration="500" class="text-center">
+      <h4 class="font-pure-heart text-[100px]">Subscribe to Our Newsletter</h4>
+      {% form 'customer' %}
+        <div class="flex justify-center gap-2 md:gap-4 pt-4 md:pt-10">
+          <input
+            id="newsletter-email"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email }}"
+            placeholder="YOUR EMAIL"
+            class="p-2 lg:p-3 border max-w-xl w-full border-black/10 bg-transparent placeholder:text-black/70 md:text-lg"
+            required
+          >
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <button
+            id="newsletter-submit-btn"
+            type="submit"
+            class="bg-primary text-white py-2 md:py-3 px-10 md:text-lg cursor-pointer transition-all ease-in-out duration-300 hover:bg-primary/70 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+          >
+            <span class="btn-text">Subscribe</span>
+            <i class="fa-solid fa-spinner fa-spin hidden" id="newsletter-spinner" style="display: none;"></i>
+          </button>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form[action^="/contact"]') || document.querySelector('form[action^="/account"]');
+    const btn = document.getElementById('newsletter-submit-btn');
+    const spinner = document.getElementById('newsletter-spinner');
+    const btnText = btn?.querySelector('.btn-text');
+    const emailInput = document.getElementById('newsletter-email');
+
+    // Enable/disable submit button based on input
+    function toggleButtonState() {
+      btn.disabled = !emailInput.value.trim() || !emailInput.checkValidity();
+    }
+
+    if (emailInput) {
+      emailInput.addEventListener('input', toggleButtonState);
+      toggleButtonState(); // run once on load
+    }
+
+    // Show loading spinner on submit
+    if (form && btn && spinner && btnText) {
+      form.addEventListener('submit', () => {
+        btn.disabled = true;
+        btnText.textContent = 'Loading...';
+        spinner.classList.remove('hidden');
+        spinner.style.display = 'inline-block'; // <-- this is what was missing
+      });
+    }
+
+    // If form was just submitted successfully
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('customer_posted') === 'true' && btn && spinner && btnText) {
+      btn.disabled = true;
+      btn.classList.remove('bg-white', 'hover:bg-white/70');
+      btn.classList.add('bg-green-500', 'hover:bg-green-500', 'text-white');
+      btnText.textContent = 'Subscribed';
+      spinner.classList.remove('fa-spinner', 'fa-spin', 'hidden');
+      spinner.classList.add('fa-check');
+    }
+  });
+</script>
