@@ -1,0 +1,16 @@
+{% assign image = image %}
+{% assign category = category %}
+{% assign href = href %}
+
+<div class="h-[450px] w-full bg-white flex justify-between flex-col">
+  <div class="h-[375px] w-full">
+    <img src="{{ image | asset_url }}" alt="{{ category }}" class="object-cover w-full h-full">
+  </div>
+  <div class="p-4 w-full flex items-center flex-1">
+    <a
+      href="{{ href }}"
+      class=" bg-white border border-primmary hover:bg-primary hover:text-white text-primary w-full py-3 text-center transition-all ease-in-out duration-300 uppercase"
+      >Shop {{ category -}}
+    </a>
+  </div>
+</div>

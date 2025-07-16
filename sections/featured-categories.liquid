@@ -1,0 +1,21 @@
+<div class="md:py-20 py-10 bg-background">
+  <div class="container">
+    <h2 class="font-bold text-4xl md:text-[68px] text-center uppercase">Featured Categories</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 md:mt-10">
+      {% render 'featured-categories-card', image: 'polaris-category.jpg', category: 'Polaris', href: '/collections/polaris' %}
+      {% render 'featured-categories-card', image: 'ski-doo.png', category: 'Ski-Doo', href: '/collections/ski-doo' %}
+      {% render 'featured-categories-card',
+        image: 'exit-shocks.png',
+        category: 'Snowmobile Exit Shocks',
+        href: '/collections/exit-shocks'
+      %}
+      {% render 'featured-categories-card', image: 'yamaha.png', category: 'Artic Cat/Yamaha', href: '/collections/yamaha' %}
+      {% render 'featured-categories-card',
+        image: 'utv-exit-shocks.png',
+        category: 'UTV Exit Shocks',
+        href: '/collections/utv-exit-shocks'
+      %}
+      {% render 'featured-categories-card', image: 'utv-springs.jpg', category: 'UTV Springs', href: '/collections/utv-springs' %}
+    </div>
+  </div>
+</div>
