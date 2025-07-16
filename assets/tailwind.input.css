@@ -24,3 +24,40 @@
 html {
   scroll-behavior: smooth;
 }
+
+.prose h1 {
+  @apply my-0 mt-10 text-2xl font-bold md:text-4xl;
+}
+
+.prose h2 {
+  @apply my-4 mt-10 text-xl font-bold md:text-3xl;
+}
+
+.prose h3 {
+  @apply my-2 text-lg font-bold md:text-2xl;
+}
+
+.prose h4 {
+  @apply my-0 mt-0 text-base leading-8 font-bold md:text-xl;
+}
+
+.prose li p {
+  @apply my-0;
+}
+
+.prose p {
+  @apply text-sm md:text-base;
+}
+
+.prose blockquote {
+  @apply my-4 border-l-2 border-black pl-4 md:w-[60%];
+  quotes: none;
+}
+
+.prose blockquote p {
+  @apply text-xl;
+}
+
+.prose a {
+  @apply text-primary hover:text-primary/80;
+}
