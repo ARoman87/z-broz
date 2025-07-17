@@ -1,0 +1,140 @@
+<!-- Fitment Filter Container -->
+<div class="bg-black py-2 lg:block hidden">
+  <div class="container flex gap-4">
+    <div x-data="fitmentFilter()" x-init="init" class="flex items-center gap-2">
+      <!-- Make Dropdown -->
+      <div class="relative" x-data="{ open: false }">
+        <button
+          @click="open = !open"
+          class="text-white cursor-pointer flex justify-between items-center bg-white/10 px-4 py-2 w-32 text-left"
+        >
+          <span x-text="selectedMake || 'Make'"></span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <ul
+          x-show="open"
+          @click.away="open = false"
+          class="absolute z-10 mt-1 bg-black text-white w-full border border-white/20"
+        >
+          <template x-for="make in Object.keys(data)" :key="make">
+            <li
+              @click="selectedMake = make; onMakeChange(); open = false"
+              class="px-4 py-2 hover:bg-white/10 "
+              x-text="make"
+            ></li>
+          </template>
+        </ul>
+      </div>
+
+      <!-- Model Dropdown -->
+      <div class="relative" x-data="{ open: false }">
+        <button
+          @click="selectedMake && (open = !open)"
+          class="text-white flex cursor-pointer disabled:cursor-default justify-between items-center bg-white/10 px-4 py-2 w-32 text-left disabled:opacity-50"
+          :disabled="!selectedMake"
+        >
+          <span x-text="selectedModel || 'Model'"></span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <ul
+          x-show="open"
+          @click.away="open = false"
+          class="absolute z-10 mt-1 bg-black text-white w-full border border-white/20"
+        >
+          <template x-for="model in availableModels" :key="model">
+            <li
+              @click="selectedModel = model; onModelChange(); open = false"
+              class="px-4 py-2 hover:bg-white/10 "
+              x-text="model"
+            ></li>
+          </template>
+        </ul>
+      </div>
+
+      <!-- Year Dropdown -->
+      <div class="relative" x-data="{ open: false }">
+        <button
+          @click="selectedModel && (open = !open)"
+          class="text-white bg-white/10 cursor-pointer disabled:cursor-default flex justify-between items-center px-4 py-2 w-32 text-left disabled:opacity-50"
+          :disabled="!selectedModel"
+        >
+          <span x-text="selectedYear || 'Year'"></span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <ul
+          x-show="open"
+          @click.away="open = false"
+          class="absolute z-10 mt-1 bg-black text-white w-full border border-white/20"
+        >
+          <template x-for="year in availableYears" :key="year">
+            <li
+              @click="selectedYear = year; open = false"
+              class="px-4 py-2 hover:bg-white/10 cursor-pointer"
+              x-text="year"
+            ></li>
+          </template>
+        </ul>
+      </div>
+
+      <!-- Search Button -->
+      <button
+        @click="searchProducts"
+        :disabled="!(selectedMake && selectedModel && selectedYear)"
+        class="bg-red-600 cursor-pointer disabled:cursor-default text-white px-2 py-1 disabled:opacity-50"
+      >
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+
+    <div class="flex-1">
+      <form action="/search" method="get" class="flex items-center flex-1 bg-white/10 h-full p-1">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search Product"
+          class="w-full bg-transparent text-white px-4 placeholder:font-normal placeholder:text-white/50  focus:outline-none"
+        >
+        <button type="submit" class="bg-red-600 text-white h-full px-2">
+          <i class="fa fa-search"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function fitmentFilter() {
+    return {
+      data: {}, // will be populated by JSON
+      selectedMake: '',
+      selectedModel: '',
+      selectedYear: '',
+      availableModels: [],
+      availableYears: [],
+      async init() {
+        const res = await fetch('{{ "make-model-year.json" | asset_url }}');
+        this.data = await res.json();
+      },
+      onMakeChange() {
+        this.selectedModel = '';
+        this.selectedYear = '';
+        this.availableModels = Object.keys(this.data[this.selectedMake] || {});
+        this.availableYears = [];
+      },
+      onModelChange() {
+        this.selectedYear = '';
+        this.availableYears = this.data[this.selectedMake]?.[this.selectedModel] || [];
+      },
+      searchProducts() {
+        const make = this.selectedMake;
+        const model = this.selectedModel;
+        const year = this.selectedYear;
+
+        if (make && model && year) {
+          const tag = `fitment_${make}_${model}_${year}`.replaceAll(' ', '-');
+          window.location.href = `/search?q=tag:${tag}`;
+        }
+      }
+    };
+  }
+</script>

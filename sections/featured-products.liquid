@@ -1,9 +1,16 @@
+{% assign dealer_handles = collections.dealers.products | map: 'handle' %}
 <div class="md:py-20 py-10 bg-background">
   <div class="container">
     <h2 class="text-4xl md:text-[68px] font-bold mb-10 uppercase max-w-3xl leading-tight">Find the Perfect Fit for Your Ride</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% assign shown = 0 %}
       {% for product in collections.all.products %}
-        {% render 'product-card', product: product %}
+        {% unless dealer_handles contains product.handle %}
+          {% if shown < 8 %}
+            {% render 'product-card', product: product %}
+            {% assign shown = shown | plus: 1 %}
+          {% endif %}
+        {% endunless %}
       {% endfor %}
     </div>
   </div>

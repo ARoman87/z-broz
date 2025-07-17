@@ -1,0 +1,162 @@
+{% assign blog = blogs.news %}
+<div>
+  <div class="bg-black text-white py-10">
+    <div class="container">
+      <div class="flex justify-between lg:flex-row flex-col py-6 md:py-10 gap-10">
+        <div class="max-w-md flex flex-col gap-10">
+          <div class="h-[45px]">
+            <img src="{{'logo.png' | asset_url}}" alt="z-broz logo" class="h-full -ml-6 w-auto object-contain">
+          </div>
+          <div>
+            <p class="text-sm text-white/70">
+              When you buy Zbroz, you're not just buying parts. You're investing in a legacy of performance, precision, and trust—engineered
+              by racers who know exactly what your machine needs to conquer any terrain.
+            </p>
+          </div>
+          <div class=" bg-white/30">
+            {% form 'customer' %}
+              <div class="flex h-full">
+                <input
+                  type="email"
+                  name="contact[email]"
+                  placeholder="Enter Your Email"
+                  required
+                  class="bg-transparent text-white placeholder-white placeholder:text-xs p-3 flex-1 min-w-0 focus:outline-none"
+                >
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <button
+                  type="submit"
+                  class="bg-primary  text-white text-xs px-6 py-2 whitespace-nowrap m-1 cursor-pointer hover:scale-[1.02] transition-transform duration-200 ease-in-out"
+                >
+                  Subscribe Now
+                </button>
+              </div>
+            {% endform %}
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:max-w-2xl w-full">
+          <div class="">
+            <h3 class="font-semibold mb-4 text-lg uppercase">Information</h3>
+            <ul class="flex flex-col md:text-base text-sm gap-2">
+              <li><a href="/pages/about" class="hover:underline">About Us</a></li>
+              <li><a href="/" class="hover:underline">Map Policy</a></li>
+              <li><a href="/" class="hover:underline">Cookie Policy</a></li>
+              <li><a href="/" class="hover:underline">Return Policy</a></li>
+              <li><a href="/" class="hover:underline">CCPA</a></li>
+              <li><a href="/" class="hover:underline">SB657</a></li>
+            </ul>
+          </div>
+          <div class="">
+            <h3 class="font-semibold mb-4 text-lg uppercase">Helpful Links</h3>
+            <ul class="flex flex-col md:text-base text-sm gap-2">
+              <li><a href="/" class="hover:underline">FAQ</a></li>
+              <li><a href="/" class="hover:underline">Warranty</a></li>
+              <li><a href="/pages/shock-service" class="hover:underline">Shock Maintenance & Service</a></li>
+              <li><a href="/" class="hover:underline">Newsletter Sign-Up</a></li>
+              <li><a href="/pages/contact" class="hover:underline">Contact Us</a></li>
+              <li><a href="/collections/all" class="hover:underline">Product Catalog</a></li>
+            </ul>
+          </div>
+
+          <!-- Blog Links -->
+          <div class="">
+            <h3 class="font-semibold mb-4 text-lg uppercase">Blogs</h3>
+            <ul class="flex flex-col md:text-base text-sm  gap-2">
+              {% for article in blog.articles limit: 5 %}
+                <li>
+                  <a href="{{ article.url }}" class="hover:underline block  truncate">
+                    {{ article.title | truncate: 20 }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-10">
+        <div>
+          <p class="uppercase font-bold text-xl mb-4">Contact</p>
+          <div class="flex gap-10 text-white/70 text-lg">
+            <div>
+              <p>ZBROZ Racing</p>
+              <p>700 West 1700 South Building</p>
+              <p>9, Logan UT 84321</p>
+            </div>
+            <div>
+              <p><a href="tel:+1435737774">(435) 737-774</a></p>
+              <p><a href="mailto:customerservice@zbrozracing.com">customerservice@zbrozracing.com</a></p>
+              <p><a href="mailto:sales@zbrozracing.com">sales@zbrozracing.com</a></p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="flex gap-3 mt-4 md:mt-10">
+            <a href="https://www.facebook.com/ZbrozRacing/" target="_blank" class=" text-white text-xl "
+              ><i class="fa-brands fa-facebook border border-white/20 shadow p-2 rounded-full"></i
+            ></a>
+            <a href="https://www.instagram.com/zbroz_racing" target="_blank" class=" text-white text-xl "
+              ><i class="fa-brands fa-square-instagram border border-white/20 shadow p-2 rounded-full"></i
+            ></a>
+            <a href="https://x.com/zbroz_racing" target="_blank" class=" text-white text-xl "
+              ><i class="fa-brands fa-x-twitter border border-white/20 shadow p-2 rounded-full"></i
+            ></a>
+            <a href="https://www.youtube.com/user/EXITshocks" target="_blank" class=" text-white text-xl "
+              ><i class="fa-brands fa-youtube border border-white/20 shadow p-2 rounded-full"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+
+      <!--
+        <div class="flex justify-between items-center lg:flex-row flex-col gap-4 pb-6 md:pb-10">
+          <div>
+            <div class="flex items-center gap-2 text-sm">
+              © {{ 'now' | date: '%Y' }} Powered by:
+              <a href="https://launchpoint.dev/" target="_blank" class="border-b pb-0.5">
+                <img
+                  src="{{ 'Logo-Launchpoint-White.png' | asset_url }}"
+                  alt="LaunchPoint Logo"
+                  class="h-[10px] mt-1 md:h-[11px] "
+                  width="auto"
+                  height="11"
+                >
+              </a>
+            </div>
+          </div>
+
+          <ul class="flex gap-10 md:text-base text-sm ">
+            <li><a href="/pages/privacy-policy">Privacy</a></li>
+            <li><a href="/pages/terms-and-conditions">Terms</a></li>
+            <li><a href="#">Back to Top</a></li>
+          </ul>
+        </div>
+      -->
+    </div>
+  </div>
+  <div class="bg-primary py-4 text-white ">
+    <div class="container flex justify-between items-center">
+      <div class="flex items-center gap-2 text-sm">
+        © {{ 'now' | date: '%Y' }} Powered by:
+        <a href="https://launchpoint.dev/" target="_blank" class="border-b pb-0.5">
+          <img
+            src="{{ 'Logo-Launchpoint-White.png' | asset_url }}"
+            alt="LaunchPoint Logo"
+            class="h-[10px] mt-1 md:h-[11px] "
+            width="auto"
+            height="11"
+          >
+        </a>
+      </div>
+      <div class="flex items-center gap-2">
+        <img src="{{ 'payment1.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+        <img src="{{ 'payment2.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+        <img src="{{ 'payment3.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+        <img src="{{ 'payment4.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+        <img src="{{ 'payment5.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+        <img src="{{ 'payment6.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+        <img src="{{ 'payment7.png' | asset_url }}" alt="Payment Methods" class="h-6 w-auto">
+      </div>
+    </div>
+  </div>
+</div>

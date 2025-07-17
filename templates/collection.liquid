@@ -1,1 +1,60 @@
-<div>collections page</div>
+<div class="pt-32 md:pt-40 md:pb-20 pb-10 bg-background">
+  <section class="container md:pt-10 pt-0">
+    {% if collection.title %}
+      <h1 class="text-5xl md:text-8xl mb-4">{{ collection.title }}</h1>
+    {% else %}
+      <h1 class="text-5xl md:text-8xl mb-4">All Products</h1>
+    {% endif %}
+
+    <div class="flex gap-10 mt-20">
+      <div class="w-[25%] md:block hidden sticky top-10 self-start">
+        {% if collection.handle == 'utv' %}
+          {% render 'sidebar-utv' %}
+        {% elsif collection.handle == 'snowmobile' %}
+          {% render 'sidebar-snowmobile' %}
+        {% elsif collection.handle == 'snowbike' %}
+          {% render 'sidebar-snowbike' %}
+        {% endif %}
+      </div>
+      <div class="md:w-[75%] w-full">
+        {% if collection.products_count > 0 %}
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for product in collection.products %}
+              <div
+                class="product-card"
+                data-part="{{ product.tags | join: ' ' }}"
+              >
+                {% render 'product-card', product: product %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No products found in this collection.</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.filter-button');
+    const products = document.querySelectorAll('.product-card');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.part;
+
+        products.forEach((product) => {
+          const tags = product.dataset.part;
+
+          if (tags.includes(filter)) {
+            product.style.display = 'block';
+          } else {
+            product.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

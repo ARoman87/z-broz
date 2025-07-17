@@ -25,6 +25,28 @@ html {
   scroll-behavior: smooth;
 }
 
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+#mobile-slideout {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+#mobile-slideout::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, etc. */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .prose h1 {
   @apply my-0 mt-10 text-2xl font-bold md:text-4xl;
 }
