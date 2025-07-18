@@ -2,7 +2,7 @@
 
 <div>
   <div
-    class="bg-center bg-cover bg-no-repeat aspect-[12/9] md:aspect-[16/9] relative"
+    class="bg-center bg-cover bg-no-repeat aspect-[10/9] md:aspect-[16/9] relative"
     style="background-image: url('{{ article.image | img_url: 'grande' }}');"
   >
     <div class="absolute inset-0 bg-black opacity-50 z-0"></div>
@@ -23,6 +23,17 @@
   <div class="container pb-10 md:pb-20">
     <div class="prose max-w-none text-black">
       {{ article.content }}
+    </div>
+  </div>
+  <div
+    class="bg-cover bg-center md:h-[550px] h-[400px] w-full py-20 relative"
+    style="background-image: url('{{ 'about-cta.jpg' | asset_url }}');"
+  >
+    <div class="absolute inset-0 bg-black opacity-70 z-0"></div>
+    <div class="container h-full flex justify-center flex-col relative z-10 items-center text-center gap-5 text-white">
+      <h2 class="text-4xl md:text-[68px] font-bold uppercase tracking-tighter">Ride What The Pros Trust</h2>
+      <p class="md:text-lg mb-6 max-w-xl">Explore the Zbroz difference and experience race-proven suspension on your own machine.</p>
+      <a href="/collections/all" class="bg-primary text-white px-6 py-3 uppercase md:text-base text-sm">Find My Parts</a>
     </div>
   </div>
 </div>
