@@ -1,1 +1,108 @@
-<div class="pt-40">cart page</div>
+<div class="md:pt-40 pt-20 md:pb-20 pb-10">
+  <div class="container">
+    {% if cart.item_count == 0 %}
+      <div class="flex flex-col items-center gap-6 pt-20">
+        <p class="text-5xl font-semibold">Your cart is empty.</p>
+        <a href="/" class="bg-gradient-to-b from-[#EE6723] to-[#883B14] px-6 py-3 flex justify-center rounded-full">Continue shopping</a>
+      </div>
+    {% else %}
+      <div>
+        <div class="flex justify-between items-center mb-10">
+          <h1 class="md:text-5xl text-2xl font-bold ">Your cart</h1>
+          <a href="/" class="underline text-[#C1E5FF]">Continue shopping</a>
+        </div>
+
+        <div class="flex text-sm uppercase text-black/70 border-b border-white/10 pb-4 mb-6">
+          <div class="w-1/2">
+            <p>Product</p>
+          </div>
+          <div class="w-1/2 flex">
+            <p class="w-1/2 text-center">Quantity</p>
+            <p class="w-1/2 text-right">Total</p>
+          </div>
+        </div>
+
+        <form action="/cart" method="post">
+          {% for item in cart.items %}
+            <div class="flex  items-center py-6 border-b border-white/5">
+              <!-- Product -->
+              <div class="flex gap-4 w-1/2">
+                {% assign variant_image = item.variant.featured_image | default: item.image %}
+                <img src="{{ variant_image | img_url: '150x150' }}" alt="{{ item.product.title }}" class="w-[100px] rounded">
+                <div class="flex flex-col gap-1">
+                  <p class="font-bold text-black">{{ item.product.title }}</p>
+                  <p class="text-sm mt-1 text-black/70">{{ item.price | money_without_trailing_zeros }}</p>
+                  {% for option in item.options_with_values %}
+                    <p class="text-sm text-black/70">{{ option.name }}: {{ option.value }}</p>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <!-- Quantity Controls -->
+              <div class="w-1/2 flex  items-center">
+                <div class="w-1/2 flex justify-center items-center pl-12">
+                  <div class="inline-flex items-center bg-white/5 rounded-full overflow-hidden">
+                    <button
+                      type="submit"
+                      name="updates[]"
+                      value="{{ item.quantity | minus: 1 }}"
+                      class="px-4 py-2"
+                      formaction="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      name="updates[]"
+                      value="{{ item.quantity }}"
+                      class="w-12 text-center bg-transparent appearance-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      min="1"
+                      readonly
+                    >
+                    <button
+                      type="submit"
+                      name="updates[]"
+                      value="{{ item.quantity | plus: 1 }}"
+                      class="px-4 py-2"
+                      formaction="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <button
+                    type="submit"
+                    class="ml-3 text-[#C1E5FF]"
+                    formaction="/cart/change?line={{ forloop.index }}&quantity=0"
+                  >
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </div>
+                <!-- Total -->
+                <div class="w-1/2 text-right font-medium text-black">
+                  {{ item.line_price | money }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+          <!-- Footer -->
+          <div class="flex justify-end  mt-10">
+            <div class="text-right">
+              <p class="text-black font-semibold text-lg mb-2">Estimated total: {{ cart.total_price | money }}</p>
+              <p class="text-sm max-w-[200px] text-black/70 mb-4">Taxes, discounts and shipping calculated at checkout.</p>
+              <div>
+                <button
+                  type="submit"
+                  name="checkout"
+                  class="bg-gradient-to-b from-[#EE6723] to-[#883B14] transition-all duration-300 ease-in-ou hover:scale-[1.05] text-black px-8 py-3 rounded-full text-sm "
+                >
+                  Check out
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</div>

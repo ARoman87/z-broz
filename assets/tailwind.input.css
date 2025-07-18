@@ -47,6 +47,10 @@ html {
   scrollbar-width: none;
 }
 
+[x-cloak] {
+  display: none !important;
+}
+
 .prose h1 {
   @apply my-0 mt-10 text-2xl font-bold md:text-4xl;
 }
@@ -65,10 +69,6 @@ html {
 
 .prose li p {
   @apply my-0;
-}
-
-.prose p {
-  @apply text-sm md:text-base;
 }
 
 .prose blockquote {

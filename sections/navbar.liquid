@@ -65,8 +65,14 @@
           <a href="/account" class="border border-black/30 shadow h-10 w-10 flex items-center justify-center">
             <i class="fa-regular fa-user"></i>
           </a>
-          <a href="/cart" class="border border-black/30 shadow h-10 w-10 flex items-center justify-center">
-            <i class="fa-regular fa-cart-shopping"></i>
+          <a href="/cart" class="border border-black/30 shadow h-10 w-10 flex items-center justify-center relative">
+            <i class="fa-regular fa-cart-shopping">
+              <span
+                class="cart-count-badge absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full flex items-center justify-center h-5 w-5 {% unless cart.item_count > 0 %}hidden{% endunless %}"
+              >
+                {{ cart.item_count }}
+              </span>
+            </i>
           </a>
         </div>
         <div class="lg:hidden block pr-2">
@@ -118,8 +124,14 @@
         <a href="/account" class="border border-black/30 shadow h-10 w-10 flex items-center justify-center">
           <i class="fa-regular fa-user"></i>
         </a>
-        <a href="/cart" class="border border-black/30 shadow h-10 w-10 flex items-center justify-center">
-          <i class="fa-regular fa-cart-shopping"></i>
+        <a href="/cart" class="border border-black/30 shadow h-10 w-10 flex items-center justify-center relative">
+          <i class="fa-regular fa-cart-shopping">
+            <span
+              class="cart-count-badge absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full flex items-center justify-center h-5 w-5 {% unless cart.item_count > 0 %}hidden{% endunless %}"
+            >
+              {{ cart.item_count }}
+            </span>
+          </i>
         </a>
       </div>
     </div>

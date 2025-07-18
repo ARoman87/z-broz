@@ -1,1 +1,288 @@
-<div>Product page</div>
+{% assign colors = product.options_by_name.Color.values %}
+
+<div class="pt-32 md:pt-52 md:pb-20 pb-10 bg-background">
+  <div class="container">
+    <a href="javascript:history.back()" class="text-sm underline hover:text-red-600">← Back</a>
+
+    <div class="grid lg:grid-cols-2 grid-cols-1 gap-10 xl:gap-20 mt-10">
+      <div
+        x-data="productGallery()"
+        x-init="init"
+        data-images="
+          [
+            {% for image in product.images %}
+              '{{ image | img_url: 'grande' }}'{% unless forloop.last %}, {% endunless %}
+            {% endfor %}
+          ]
+        "
+        data-image-count="{{ product.images.size }}"
+      >
+        <!-- Main Image -->
+        <div class="h-[350px] md:h-[500px] overflow-hidden bg-white flex items-center justify-center mb-4">
+          <img :src="images[selected]" alt="{{ product.title }}" class="h-full object-contain">
+        </div>
+
+        <!-- Thumbnail Carousel -->
+        <div class="relative" x-show="imageCount > 1">
+          <!-- Left Arrow -->
+          <button
+            @click="scroll('left')"
+            class="absolute cursor-pointer left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 hover:bg-white shadow"
+          >
+            <i class="fa fa-chevron-left"></i>
+          </button>
+
+          <!-- Thumbnails -->
+          <div class="overflow-x-auto scrollbar-hide" x-ref="carousel">
+            <div class="flex gap-2 w-max px-10">
+              {% for image in product.images %}
+                <div class="bg-white h-[100px] w-[100px] overflow-hidden cursor-pointer relative">
+                  <img
+                    src="{{ image | img_url: '100x100' }}"
+                    alt="{{ image.alt | escape }}"
+                    class="h-full w-full object-contain border border-transparent cursor-pointer transition-all"
+                    :class="{ 'border-black': selected === {{ forloop.index0 }} }"
+                    @click="selected = {{ forloop.index0 }}"
+                  >
+                  <!-- Selected Overlay -->
+                  <div
+                    x-show="selected === {{ forloop.index0 }}"
+                    class="absolute inset-0 bg-white/50 border-2 border-black/20 pointer-events-none"
+                  ></div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Right Arrow -->
+          <button
+            @click="scroll('right')"
+            class="absolute cursor-pointer right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 hover:bg-white shadow"
+          >
+            <i class="fa fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex flex-col gap-2 font-medium">
+          <h1 class="font-ibm text-2xl uppercase">{{ product.title }}</h1>
+          <p class="text-3xl text-primary">{{ product.price | money }}</p>
+          <p class="text-black/70 uppercase">SKU: {{ product.variants.first.sku }}</p>
+        </div>
+
+        <!-- COLOR SELECTOR -->
+        <div
+          x-data="addToCartInit()"
+          x-init="init()"
+        >
+          <div
+            x-show="cartError"
+            x-transition
+            class="fixed top-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-red-100 text-red-700 px-4 py-3 rounded shadow z-50"
+          >
+            <p x-text="cartError"></p>
+          </div>
+
+          <template x-if="requiresColor">
+            <div>
+              <label for="color-select" class="block text-sm font-medium text-black mt-6 mb-2">Select Color</label>
+              <select
+                id="color-select"
+                x-model="selectedColor"
+                class="border bg-white cursor-pointer border-gray-300 px-6 py-2 text-sm focus:outline-none"
+              >
+                <option value="" disabled selected>Select Color</option>
+                {% for color in colors %}
+                  <option value="{{ color }}">{{ color }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </template>
+
+          <div class="mt-4">
+            {% if product.available %}
+              <button
+                @click="addToCart"
+                :disabled="requiresColor && !selectedColor"
+                :class="
+                  {
+                    'bg-primary text-white cursor-pointer': !requiresColor || selectedColor,
+                    'bg-gray-300 text-gray-600 cursor-not-allowed': requiresColor && !selectedColor
+                  }
+                "
+                class="py-2 px-6 uppercase transition-all"
+              >
+                Add to Cart
+              </button>
+            {% else %}
+              <button
+                class="bg-gray-300 text-gray-600 py-2 px-6 uppercase cursor-not-allowed"
+                disabled
+              >
+                Out of Stock
+              </button>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <div class="mt-4 text-sm prose text-black">{{ product.description }}</div>
+        </div>
+
+        <!-- TAB SECTION -->
+
+        {% assign has_overview = product.metafields.custom.product_details != blank %}
+        {% assign has_installation = product.metafields.custom.product_installation != blank %}
+        {% assign has_additional = product.metafields.custom.product_additional_information != blank %}
+        {% assign has_tabs = has_overview or has_installation or has_additional %}
+        {% if has_tabs %}
+          <div
+            x-data="{ tab: '{% if has_overview %}overview{% elsif has_installation %}installation{% else %}additional{% endif %}' }"
+            class="mt-10"
+          >
+            <div class="flex space-x-4 border-b border-gray-200">
+              {% if has_overview %}
+                <button
+                  @click="tab = 'overview'"
+                  :class="{ 'font-bold text-primary border-b-2 border-primary': tab === 'overview' }"
+                  class="pb-2 cursor-pointer"
+                >
+                  Overview
+                </button>
+              {% endif %}
+
+              {% if has_installation %}
+                <button
+                  @click="tab = 'installation'"
+                  :class="{ 'font-bold text-primary border-b-2 border-primary': tab === 'installation' }"
+                  class="pb-2 cursor-pointer"
+                >
+                  Installation
+                </button>
+              {% endif %}
+
+              {% if has_additional %}
+                <button
+                  @click="tab = 'additional'"
+                  :class="{ 'font-bold text-primary border-b-2 border-primary': tab === 'additional' }"
+                  class="pb-2 cursor-pointer"
+                >
+                  Additional Information
+                </button>
+              {% endif %}
+            </div>
+
+            <div class="mt-6">
+              {% if has_overview %}
+                <div x-show="tab === 'overview'" class="prose text-black text-sm!">
+                  {{ product.metafields.custom.product_details | metafield_tag }}
+                </div>
+              {% endif %}
+
+              {% if has_installation %}
+                <div x-show="tab === 'installation'" class="prose text-black text-sm!">
+                  {{ product.metafields.custom.product_installation | metafield_tag }}
+                </div>
+              {% endif %}
+
+              {% if has_additional %}
+                <div x-show="tab === 'additional'" class="prose text-black text-sm!">
+                  {{ product.metafields.custom.product_additional_information | metafield_tag }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="product-json">
+  {{ product | json }}
+</script>
+
+<script>
+  function productGallery() {
+    return {
+      selected: 0,
+      images: [],
+      imageCount: 0,
+      init() {
+        try {
+          this.images = eval(this.$root.dataset.images); // because it's not strict JSON
+          this.imageCount = parseInt(this.$root.dataset.imageCount);
+        } catch (e) {
+          console.error('Failed to load product images', e);
+        }
+      },
+      scroll(direction) {
+        const el = this.$refs.carousel;
+        const scrollAmount = 150;
+        el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+      }
+    };
+  }
+  function addToCartInit() {
+    return {
+      product: null,
+      selectedColor: '',
+      requiresColor: false,
+      isAvailable: true,
+      cartError: '',
+      init() {
+        const productJson = document.getElementById('product-json').textContent;
+        this.product = JSON.parse(productJson);
+        this.requiresColor = this.product.options.includes('Color');
+        this.isAvailable = this.product.available;
+      },
+      async addToCart() {
+        const variant = this.getVariant();
+
+        if (!variant) {
+          alert('Please select a valid option.');
+          return;
+        }
+
+        const formData = {
+          items: [{ id: variant.id, quantity: 1 }]
+        };
+
+        try {
+          const res = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          if (res.ok) {
+            document.dispatchEvent(
+              new CustomEvent('cart:added', {
+                detail: { productTitle: this.product.title }
+              })
+            );
+            window.dispatchEvent(
+              new CustomEvent('cart:added', {
+                detail: { productTitle: this.product.title }
+              })
+            );
+          } else if (res.status === 422) {
+            const data = await res.json();
+            this.cartError = data.message || 'Item already in cart at its limit.';
+            setTimeout(() => (this.cartError = ''), 5000);
+          } else {
+            alert('Failed to add to cart.');
+          }
+        } catch (e) {
+          console.error('Add to Cart Error:', e);
+        }
+      },
+
+      getVariant() {
+        if (!this.requiresColor) return this.product.variants[0];
+        return this.product.variants.find((v) => v.option1 === this.selectedColor);
+      }
+    };
+  }
+</script>

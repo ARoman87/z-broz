@@ -12,7 +12,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 [*.{ts,js}]
-quote_type = double
+# quote_type = double
 
 # Specific settings for code files
 [*.{js,ts,css,scss,html,json}]

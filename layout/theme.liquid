@@ -42,11 +42,76 @@
 
   <body>
     {% section 'navbar' %}
+
     {{ content_for_layout }}
     {% section 'newsletter' %}
     {% section 'footer' %}
+
+    <div class="container relative">
+      <div
+        x-data="
+          {
+            open: false,
+            productTitle: '',
+            init() {
+              window.addEventListener('cart:added', (e) => {
+                this.productTitle = e.detail.productTitle;
+                this.open = true;
+                setTimeout(() => { this.open = false }, 5000);
+              });
+            }
+          }
+        "
+        x-init="init"
+        x-show="open"
+        x-transition.opacity.duration.300ms
+        x-cloak
+        class="fixed top-6 md:right-6 right-0 mx-4 z-50 bg-white shadow-lg border border-black/10 px-4 py-3 rounded-md flex items-center gap-2"
+      >
+        <i class="fa-solid fa-check text-green-600"></i>
+        <p class="text-sm"><strong x-text="productTitle"></strong> was added to your cart.</p>
+      </div>
+    </div>
+
     <script>
       AOS.init();
+    </script>
+
+    <script>
+      document.addEventListener('cart:added', () => {
+        fetch('/cart.js')
+          .then((res) => res.json())
+          .then((data) => {
+            document.querySelectorAll('.cart-count-badge').forEach((el) => {
+              el.textContent = data.item_count;
+
+              if (data.item_count > 0) {
+                el.classList.remove('hidden');
+              } else {
+                el.classList.add('hidden');
+              }
+            });
+          });
+      });
+    </script>
+
+    <script>
+      function confirmationModal() {
+        return {
+          open: false,
+          productTitle: '',
+          init() {
+            window.addEventListener('cart:added', (e) => {
+              this.productTitle = e.detail.productTitle;
+              this.open = true;
+
+              setTimeout(() => {
+                this.open = false;
+              }, 3000);
+            });
+          }
+        };
+      }
     </script>
   </body>
 </html>
