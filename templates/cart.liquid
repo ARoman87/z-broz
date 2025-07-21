@@ -1,5 +1,5 @@
 <div class="md:pt-40 pt-20 md:pb-20 pb-10">
-  <div class="container">
+  <div class="container pt-20">
     {% if cart.item_count == 0 %}
       <div class="flex flex-col items-center gap-6 pt-20">
         <p class="text-5xl font-semibold">Your cart is empty.</p>
@@ -9,10 +9,10 @@
       <div>
         <div class="flex justify-between items-center mb-10">
           <h1 class="md:text-5xl text-2xl font-bold ">Your cart</h1>
-          <a href="/" class="underline text-[#C1E5FF]">Continue shopping</a>
+          <a href="/" class="underline text-primary">Continue shopping</a>
         </div>
 
-        <div class="flex text-sm uppercase text-black/70 border-b border-white/10 pb-4 mb-6">
+        <div class="flex text-sm uppercase text-black/70 border-b border-black/20 pb-4 mb-6">
           <div class="w-1/2">
             <p>Product</p>
           </div>
@@ -24,9 +24,9 @@
 
         <form action="/cart" method="post">
           {% for item in cart.items %}
-            <div class="flex  items-center py-6 border-b border-white/5">
+            <div class="flex md:items-center md:flex-row flex-col py-6 border-b border-black/20">
               <!-- Product -->
-              <div class="flex gap-4 w-1/2">
+              <div class="flex gap-4 md:w-1/2">
                 {% assign variant_image = item.variant.featured_image | default: item.image %}
                 <img src="{{ variant_image | img_url: '150x150' }}" alt="{{ item.product.title }}" class="w-[100px] rounded">
                 <div class="flex flex-col gap-1">
@@ -39,23 +39,23 @@
               </div>
 
               <!-- Quantity Controls -->
-              <div class="w-1/2 flex  items-center">
-                <div class="w-1/2 flex justify-center items-center pl-12">
+              <div class="md:w-1/2 flex items-center md:mt-0 mt-5">
+                <div class="w-1/2 flex justify-center items-center lg:pl-12">
                   <div class="inline-flex items-center bg-white/5 rounded-full overflow-hidden">
                     <button
                       type="submit"
                       name="updates[]"
                       value="{{ item.quantity | minus: 1 }}"
-                      class="px-4 py-2"
+                      class="px-2 py-2 cursor-pointer hover:text-lg text-base "
                       formaction="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
                     >
-                      -
+                      <i class="fa-solid fa-minus w-5 h-5 flex items-center justify-center transition-all duration-300 ease-in-out"></i>
                     </button>
                     <input
                       type="number"
                       name="updates[]"
                       value="{{ item.quantity }}"
-                      class="w-12 text-center bg-transparent appearance-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      class="w-10 text-center bg-transparent appearance-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:outline-none"
                       min="1"
                       readonly
                     >
@@ -63,18 +63,22 @@
                       type="submit"
                       name="updates[]"
                       value="{{ item.quantity | plus: 1 }}"
-                      class="px-4 py-2"
+                      class="px-2 py-2 cursor-pointer hover:text-lg text-base"
                       formaction="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
                     >
-                      +
+                      <i
+                        class="fa-solid fa-plus w-5 h-5 flex items-center justify-center text-base hover:text-xl transition-all duration-300 ease-in-out"
+                      ></i>
                     </button>
                   </div>
                   <button
                     type="submit"
-                    class="ml-3 text-[#C1E5FF]"
+                    class="ml-3 text-primary cursor-pointer"
                     formaction="/cart/change?line={{ forloop.index }}&quantity=0"
                   >
-                    <i class="fa-regular fa-trash-can"></i>
+                    <i
+                      class="fa-regular fa-trash-can w-5 h-5 flex items-center justify-center text-base hover:text-xl transition-all duration-300 ease-in-out"
+                    ></i>
                   </button>
                 </div>
                 <!-- Total -->
@@ -86,7 +90,7 @@
           {% endfor %}
 
           <!-- Footer -->
-          <div class="flex justify-end  mt-10">
+          <div class="flex justify-end mt-10">
             <div class="text-right">
               <p class="text-black font-semibold text-lg mb-2">Estimated total: {{ cart.total_price | money }}</p>
               <p class="text-sm max-w-[200px] text-black/70 mb-4">Taxes, discounts and shipping calculated at checkout.</p>
@@ -94,7 +98,7 @@
                 <button
                   type="submit"
                   name="checkout"
-                  class="bg-gradient-to-b from-[#EE6723] to-[#883B14] transition-all duration-300 ease-in-ou hover:scale-[1.05] text-black px-8 py-3 rounded-full text-sm "
+                  class="bg-primary transition-all duration-300 ease-in-out hover:scale-[1.05] text-white px-8 py-3 text-sm cursor-pointer uppercase"
                 >
                   Check out
                 </button>

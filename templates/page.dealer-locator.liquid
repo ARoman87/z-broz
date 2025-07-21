@@ -1,27 +1,42 @@
 <div>
   <div
-    class="bg-center bg-cover bg-no-repeat aspect-[9/9] md:aspect-[16/9] relative"
+    class="bg-center bg-cover bg-no-repeat aspect-[10/9] md:aspect-[16/9] relative"
     style="background-image: url('{{ 'broz3.png' | asset_url }}');"
   >
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="container h-full">
-      <div class="relative z-10 flex flex-col items-center justify-center h-full text-center py-40">
+      <div class="relative z-10 flex flex-col items-center justify-center h-full text-center pt-30 md:py-40">
         <p class="text-white uppercase md:text-2xl font-semibold">Dealer Locator</p>
-        <h1 class="font-pure-heart text-5xl md:text-[100px] text-white md:leading-40">Find Your Local Dealer</h1>
-        <div class="bg-white/20 backdrop-blur-2xl max-w-xl w-full mt-4">
-          <input type="text" id="dealer-search" placeholder="Enter zip code or city" class="border-0 w-full px-4 py-2 text-white">
+        <h1 class="font-pure-heart text-5xl md:text-[100px] text-white md:leading-40 mb-4">Find Your Local Dealer</h1>
+        <div class="bg-white/20 backdrop-blur-2xl max-w-xl w-full mt-4 flex justify-between p-1">
+          <input
+            type="text"
+            id="dealer-search"
+            placeholder="Enter ZIP code"
+            maxlength="5"
+            inputmode="numeric"
+            pattern="\d*"
+            class="border-0 focus:outline-none w-full px-4 py-2 text-white"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+          >
+          <button id="dealer-search-button" type="submit" class="bg-red-600 text-white h-full px-3">
+            <i class="fa fa-search"></i>
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="md:py-20 py-10">
+  <div id="dealer-results" class="md:py-20 py-10">
     <div class="container">
       <h2 class="font-bold text-4xl md:text-[68px] uppercase">Your Local Shops</h2>
       <p class="text-black/70 mt-4">Authorized Dealers</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10 md:mt-20">
         {% for dealer in collections.dealers.products %}
-          <div class="bg-white shadow-lg border border-black/20 flex flex-col">
+          <div
+            class="dealer-card bg-white shadow-lg border border-black/20 flex flex-col"
+            data-zip="{{ dealer.metafields.custom.dealer_zip | strip }}"
+          >
             <div class="h-[250px] w-full">
               <img
                 src="{{ dealer.featured_image | img_url: 'large' }}"
@@ -55,8 +70,11 @@
           </div>
         {% endfor %}
       </div>
-      <div class="mt-10 md:mt-20 h-[400px] md:h-[600px]" id="dealer-map-container">
-        <p class="text-center text-black/50">Click a dealer's "Directions" button to view their map here.</p>
+      <div class="flex justify-center">
+        <p id="no-results" class="text-center text-black/50 hidden mt-10">No dealers found for that ZIP code.</p>
+      </div>
+      <div class="mt-10 md:mt-20 h-[400px] md:h-[600px]" id="dealer-map-container" style="display: block;">
+        <p id="map-instruction" class="text-center text-black/50">Click a dealer's "Directions" button to view their map here.</p>
       </div>
     </div>
   </div>
@@ -87,6 +105,51 @@
           mapContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchBtn = document.getElementById('dealer-search-button');
+    const searchInput = document.getElementById('dealer-search');
+    const dealerCards = document.querySelectorAll('.dealer-card');
+    const resultsSection = document.getElementById('dealer-results');
+    const noResults = document.getElementById('no-results');
+
+    function filterDealers() {
+      const inputVal = searchInput.value.trim();
+      const zipPrefix = inputVal.match(/^\d{2}/)?.[0];
+      let hasMatch = false;
+
+      dealerCards.forEach((card) => {
+        const dealerZip = (card.dataset.zip || '').trim();
+        const dealerZipPrefix = dealerZip.slice(0, 2);
+
+        if (!zipPrefix || dealerZipPrefix === zipPrefix) {
+          card.style.display = 'flex';
+          hasMatch = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Toggle "No results" and Map container
+      noResults.style.display = hasMatch ? 'none' : 'block';
+      document.getElementById('dealer-map-container').style.display = hasMatch ? 'block' : 'none';
+
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    searchBtn.addEventListener('click', filterDealers);
+
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        filterDealers();
+      }
     });
   });
 </script>

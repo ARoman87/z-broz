@@ -1,12 +1,28 @@
+{% assign dealer_handles = collections.dealers.products | map: 'handle' %}
 <div class="pt-32 md:pt-40 md:pb-20 pb-10 bg-background">
-  <section class="container md:pt-10 pt-0">
-    {% if collection.title %}
-      <h1 class="text-5xl md:text-8xl mb-4">{{ collection.title }}</h1>
-    {% else %}
-      <h1 class="text-5xl md:text-8xl mb-4">All Products</h1>
-    {% endif %}
+  <section class="container md:pt-14 pt-0">
+    <div class="flex items-end justify-between">
+      {% if collection.title %}
+        <h1 class="text-5xl md:text-8xl md:-mt-10">{{ collection.title }}</h1>
+      {% else %}
+        <h1 class="text-5xl md:text-8xl md:-mt-10">All Products</h1>
+      {% endif %}
 
-    <div class="flex gap-10 mt-20">
+      <div class="flex items-end gap-4 -mb-2 ">
+        <select
+          id="sortDropdown"
+          class="border border-black/20 bg-white px-4 py-2 text-sm rounded cursor-pointer focus:outline-none"
+        >
+          <option value="">Sort by</option>
+          <option value="az">Name: A to Z</option>
+          <option value="za">Name: Z to A</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex gap-10 mt-14">
       <div class="w-[25%] md:block hidden sticky top-10 self-start">
         {% if collection.handle == 'utv' %}
           {% render 'sidebar-utv' %}
@@ -14,18 +30,36 @@
           {% render 'sidebar-snowmobile' %}
         {% elsif collection.handle == 'snowbike' %}
           {% render 'sidebar-snowbike' %}
+        {% elsif collection.handle == 'polaris' %}
+          {% render 'sidebar-polaris' %}
+        {% elsif collection.handle == 'ski-doo' %}
+          {% render 'sidebar-skidoo' %}
+        {% elsif collection.handle == 'snowmobile-exit-shocks' %}
+          {% render 'sidebar-snowmobile-exit-shocks' %}
+        {% elsif collection.handle == 'arctic-cat-yamaha' %}
+          {% render 'sidebar-arctic-yamaha' %}
+        {% elsif collection.handle == 'utv-exit-shocks' %}
+          {% render 'sidebar-utv-exit-shocks' %}
+        {% elsif collection.handle == 'utv-springs' %}
+          {% render 'sidebar-utv-springs' %}
+        {% elsif collection.handle == 'all' %}
+          {% render 'sidebar-products' %}
         {% endif %}
       </div>
       <div class="md:w-[75%] w-full">
         {% if collection.products_count > 0 %}
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for product in collection.products %}
-              <div
-                class="product-card"
-                data-part="{{ product.tags | join: ' ' }}"
-              >
-                {% render 'product-card', product: product %}
-              </div>
+              {% unless dealer_handles contains product.handle %}
+                <div
+                  class="product-card"
+                  data-part="{{ product.tags | join: ' ' }}"
+                  data-title="{{ product.title | escape }}"
+                  data-price="{{ product.price | divided_by: 100 }}"
+                >
+                  {% render 'product-card', product: product %}
+                </div>
+              {% endunless %}
             {% endfor %}
           </div>
         {% else %}
@@ -55,6 +89,41 @@
           }
         });
       });
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sortDropdown = document.getElementById('sortDropdown');
+    const productGrid = document.querySelector('.grid');
+    const productCards = Array.from(document.querySelectorAll('.product-card'));
+
+    sortDropdown.addEventListener('change', () => {
+      const selected = sortDropdown.value;
+      const sorted = [...productCards];
+
+      sorted.sort((a, b) => {
+        const nameA = a.dataset.title?.toLowerCase() || '';
+        const nameB = b.dataset.title?.toLowerCase() || '';
+        const priceA = parseFloat(a.dataset.price || '0');
+        const priceB = parseFloat(b.dataset.price || '0');
+
+        switch (selected) {
+          case 'az':
+            return nameA.localeCompare(nameB);
+          case 'za':
+            return nameB.localeCompare(nameA);
+          case 'price-asc':
+            return priceA - priceB;
+          case 'price-desc':
+            return priceB - priceA;
+          default:
+            return 0;
+        }
+      });
+
+      productGrid.innerHTML = '';
+      sorted.forEach((card) => productGrid.appendChild(card));
     });
   });
 </script>
