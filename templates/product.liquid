@@ -19,7 +19,7 @@
       >
         <!-- Main Image -->
         <div class="h-[350px] md:h-[500px] overflow-hidden bg-white flex items-center justify-center mb-4">
-          <img :src="images[selected]" alt="{{ product.title }}" class="h-full object-contain">
+          <img :src="images[selected]" alt="{{ product.title }}" class="h-full w-full object-cover">
         </div>
 
         <!-- Thumbnail Carousel -->
@@ -67,7 +67,16 @@
       <div>
         <div class="flex flex-col gap-2 font-medium">
           <h1 class="font-ibm text-2xl uppercase">{{ product.title }}</h1>
-          <p class="text-3xl text-primary">{{ product.price | money }}</p>
+          <p
+            class="text-3xl text-primary"
+            x-data="{ price: {{ product.variants[0].price | json }} / 100 }"
+            @price:update.window="price = $event.detail / 100"
+            x-text="
+              new Intl.NumberFormat('en-US',
+                { style: 'currency', currency: '{{ shop.currency }}' }
+              ).format(price)
+            "
+          ></p>
           <p class="text-black/70 uppercase">SKU: {{ product.variants.first.sku }}</p>
         </div>
 
@@ -87,14 +96,27 @@
           <template x-if="requiresColor">
             <div>
               <label for="color-select" class="block text-sm font-medium text-black mt-6 mb-2">Select Color</label>
+              {% assign lowest_price = product.variants[0].price %}
+              {% for v in product.variants %}
+                {% if v.price < lowest_price %}
+                  {% assign lowest_price = v.price %}
+                {% endif %}
+              {% endfor %}
+
               <select
                 id="color-select"
                 x-model="selectedColor"
-                class="border bg-white cursor-pointer border-gray-300 px-6 py-2 text-sm focus:outline-none"
+                @change="updatePrice()"
+                class="border bg-white cursor-pointer border-gray-300 p-2 text-sm focus:outline-none"
               >
                 <option value="" disabled selected>Select Color</option>
-                {% for color in colors %}
-                  <option value="{{ color }}">{{ color }}</option>
+                {% for variant in product.variants %}
+                  {% assign color = variant.option1 %}
+                  {% assign price_diff = variant.price | minus: lowest_price %}
+                  <option value="{{ color }}">
+                    {{ color -}}
+                    {%- if price_diff > 0 %} (+{{ price_diff | money_without_trailing_zeros }}){% endif %}
+                  </option>
                 {% endfor %}
               </select>
             </div>
@@ -183,6 +205,15 @@
               {% if has_installation %}
                 <div x-show="tab === 'installation'" class="prose text-black text-sm!">
                   {{ product.metafields.custom.product_installation | metafield_tag }}
+                  <div>
+                    <a
+                      href="{{ product.metafields.custom.installation_pdf | file_url }}"
+                      target="_blank"
+                      class="text-primary text-sm"
+                    >
+                      Download PDF Instructions
+                    </a>
+                  </div>
                 </div>
               {% endif %}
 
@@ -231,11 +262,22 @@
       requiresColor: false,
       isAvailable: true,
       cartError: '',
+      selectedPrice: '',
       init() {
         const productJson = document.getElementById('product-json').textContent;
         this.product = JSON.parse(productJson);
         this.requiresColor = this.product.options.includes('Color');
         this.isAvailable = this.product.available;
+
+        if (this.requiresColor) {
+          // Sort variants by price
+          const sortedVariants = [...this.product.variants].sort((a, b) => a.price - b.price);
+          const lowestVariant = sortedVariants[0];
+          this.selectedColor = lowestVariant.option1;
+          this.updatePrice();
+        } else {
+          this.selectedPrice = this.product.variants[0].price;
+        }
       },
       async addToCart() {
         const variant = this.getVariant();
@@ -282,6 +324,11 @@
       getVariant() {
         if (!this.requiresColor) return this.product.variants[0];
         return this.product.variants.find((v) => v.option1 === this.selectedColor);
+      },
+      updatePrice() {
+        const variant = this.getVariant();
+        this.selectedPrice = variant ? variant.price : this.product.variants[0].price;
+        window.dispatchEvent(new CustomEvent('price:update', { detail: this.selectedPrice }));
       }
     };
   }
