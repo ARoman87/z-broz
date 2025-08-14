@@ -47,24 +47,26 @@
         {% endif %}
       </div>
       <div class="md:w-[75%] w-full">
-        {% if collection.products_count > 0 %}
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for product in collection.products %}
-              {% unless dealer_handles contains product.handle %}
-                <div
-                  class="product-card"
-                  data-part="{{ product.tags | join: ' ' }}"
-                  data-title="{{ product.title | escape }}"
-                  data-price="{{ product.price | divided_by: 100 }}"
-                >
-                  {% render 'product-card', product: product %}
-                </div>
-              {% endunless %}
-            {% endfor %}
-          </div>
-        {% else %}
-          <p>No products found in this collection.</p>
-        {% endif %}
+        {% paginate collection.products by 800 %}
+          {% if collection.products_count > 0 %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {% for product in collection.products %}
+                {% unless dealer_handles contains product.handle %}
+                  <div
+                    class="product-card"
+                    data-part="{{ product.tags | join: ' ' }}"
+                    data-title="{{ product.title | escape }}"
+                    data-price="{{ product.price | divided_by: 100 }}"
+                  >
+                    {% render 'product-card', product: product %}
+                  </div>
+                {% endunless %}
+              {% endfor %}
+            </div>
+          {% else %}
+            <p>No products found in this collection.</p>
+          {% endif %}
+        {% endpaginate %}
       </div>
     </div>
   </section>
