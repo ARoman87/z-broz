@@ -6,121 +6,26 @@
     </div>
     <div class="mt-4">
       <ul class="flex flex-col divide-y divide-gray-200 text-sm text-black/70">
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Exit_Shocks"
-          >
-            EXIT Shocks
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_A_Arms"
-          >
-            A-arms
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Radius_Rods"
-          >
-            Radius Rods
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Tie_Rods"
-          >
-            Tie Rods
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Trailing_Arms"
-          >
-            Trailing Arms
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Sway_Bar"
-          >
-            Sway Bar
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Springs"
-          >
-            Spring Kits
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Coil_Springs"
-          >
-            Coil Springs
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Accessories"
-          >
-            Accessories
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Lift_Kits"
-          >
-            Lift Kits
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Harness"
-          >
-            Harness
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Winches"
-          >
-            Winches
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Ball_Joints"
-          >
-            Ball Joints
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Bumpers"
-          >
-            Bumpers
-          </button>
-        </li>
+        {% for tag in collection.all_tags %}
+          {% capture pref %}{{ tag | downcase | slice: 0,5 }}{% endcapture %}
+          {% if pref == 'part_' %}
+            {% assign label = tag | replace_first: 'part_', '' | replace: '_', ' ' | strip %}
+            <li>
+              <a
+                class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
+                href="{{ collection.url }}/{{ tag | handle }}"
+                class="capitalize"
+              >
+                {{- label -}}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
       </ul>
     </div>
   </div>
 
-  <button class="filter-button cursor-pointer p-4" data-part="">All Parts</button>
+  <div class="mt-2">
+    <a class="filter-button cursor-pointer p-4" href="{{ collection.url }}">All Parts</a>
+  </div>
 </div>

@@ -1,89 +1,90 @@
 <div class="border-b border-black/20 pb-10 mb-10">
   <div class="container">
-    <div x-data="fitmentFilter()" x-init="init" class="flex items-center gap-1">
-      <!-- Make Dropdown -->
-      <div class="relative text-sm" x-data="{ open: false }">
-        <button
-          @click="open = !open"
-          class=" cursor-pointer text-sm flex justify-between items-center bg-gray-200 px-4 py-2 w-24 text-left"
-        >
-          <span x-text="selectedMake || 'Make'"></span>
-          <i class="fa fa-chevron-down text-xs"></i>
-        </button>
-        <ul
-          x-show="open"
-          @click.away="open = false"
-          class="absolute z-10 mt-1 bg-gray-200 w-full border border-white/20"
-        >
-          <template x-for="make in Object.keys(data)" :key="make">
-            <li
-              @click="selectedMake = make; onMakeChange(); open = false"
-              class="px-4 py-2 hover:bg-gray-200 text-xs"
-              x-text="make"
-            ></li>
-          </template>
-        </ul>
-      </div>
+    <!--
+      <div x-data="fitmentFilter()" x-init="init" class="flex items-center gap-1">
 
-      <!-- Model Dropdown -->
-      <div class="relative" x-data="{ open: false }">
-        <button
-          @click="selectedMake && (open = !open)"
-          class=" flex cursor-pointer text-sm disabled:cursor-default justify-between items-center bg-gray-200 px-4 py-2 w-24 text-left disabled:opacity-50"
-          :disabled="!selectedMake"
-        >
-          <span x-text="selectedModel || 'Model'"></span>
-          <i class="fa fa-chevron-down text-xs"></i>
-        </button>
-        <ul
-          x-show="open"
-          @click.away="open = false"
-          class="absolute z-10 mt-1 bg-gray-200  w-full border border-white/20"
-        >
-          <template x-for="model in availableModels" :key="model">
-            <li
-              @click="selectedModel = model; onModelChange(); open = false"
-              class="px-4 py-2 hover:bg-gray-200  text-xs"
-              x-text="model"
-            ></li>
-          </template>
-        </ul>
-      </div>
+        <div class="relative text-sm" x-data="{ open: false }">
+          <button
+            @click="open = !open"
+            class=" cursor-pointer text-sm flex justify-between items-center bg-gray-200 px-4 py-2 w-24 text-left"
+          >
+            <span x-text="selectedMake || 'Make'"></span>
+            <i class="fa fa-chevron-down text-xs"></i>
+          </button>
+          <ul
+            x-show="open"
+            @click.away="open = false"
+            class="absolute z-10 mt-1 bg-gray-200 w-full border border-white/20"
+          >
+            <template x-for="make in Object.keys(data)" :key="make">
+              <li
+                @click="selectedMake = make; onMakeChange(); open = false"
+                class="px-4 py-2 hover:bg-gray-200 text-xs"
+                x-text="make"
+              ></li>
+            </template>
+          </ul>
+        </div>
 
-      <!-- Year Dropdown -->
-      <div class="relative" x-data="{ open: false }">
-        <button
-          @click="selectedModel && (open = !open)"
-          class=" bg-gray-200 cursor-pointer text-sm disabled:cursor-default flex justify-between items-center px-4 py-2 w-24 text-left disabled:opacity-50"
-          :disabled="!selectedModel"
-        >
-          <span x-text="selectedYear || 'Year'"></span>
-          <i class="fa fa-chevron-down text-xs"></i>
-        </button>
-        <ul
-          x-show="open"
-          @click.away="open = false"
-          class="absolute z-10 mt-1 bg-gray-200  w-full border border-white/20"
-        >
-          <template x-for="year in availableYears" :key="year">
-            <li
-              @click="selectedYear = year; open = false"
-              class="px-4 py-2 hover:bg-gray-200 cursor-pointer text-xs"
-              x-text="year"
-            ></li>
-          </template>
-        </ul>
-      </div>
 
-      <!-- Search Button -->
-      <button
-        @click="searchProducts"
-        :disabled="!(selectedMake && selectedModel && selectedYear)"
-        class="bg-red-600 cursor-pointer text-white disabled:cursor-default  px-2 py-[5px] disabled:opacity-50"
-      >
-        <i class="fa fa-search"></i>
-      </button>
-    </div>
+        <div class="relative" x-data="{ open: false }">
+          <button
+            @click="selectedMake && (open = !open)"
+            class=" flex cursor-pointer text-sm disabled:cursor-default justify-between items-center bg-gray-200 px-4 py-2 w-24 text-left disabled:opacity-50"
+            :disabled="!selectedMake"
+          >
+            <span x-text="selectedModel || 'Model'"></span>
+            <i class="fa fa-chevron-down text-xs"></i>
+          </button>
+          <ul
+            x-show="open"
+            @click.away="open = false"
+            class="absolute z-10 mt-1 bg-gray-200  w-full border border-white/20"
+          >
+            <template x-for="model in availableModels" :key="model">
+              <li
+                @click="selectedModel = model; onModelChange(); open = false"
+                class="px-4 py-2 hover:bg-gray-200  text-xs"
+                x-text="model"
+              ></li>
+            </template>
+          </ul>
+        </div>
+
+
+        <div class="relative" x-data="{ open: false }">
+          <button
+            @click="selectedModel && (open = !open)"
+            class=" bg-gray-200 cursor-pointer text-sm disabled:cursor-default flex justify-between items-center px-4 py-2 w-24 text-left disabled:opacity-50"
+            :disabled="!selectedModel"
+          >
+            <span x-text="selectedYear || 'Year'"></span>
+            <i class="fa fa-chevron-down text-xs"></i>
+          </button>
+          <ul
+            x-show="open"
+            @click.away="open = false"
+            class="absolute z-10 mt-1 bg-gray-200  w-full border border-white/20"
+          >
+            <template x-for="year in availableYears" :key="year">
+              <li
+                @click="selectedYear = year; open = false"
+                class="px-4 py-2 hover:bg-gray-200 cursor-pointer text-xs"
+                x-text="year"
+              ></li>
+            </template>
+          </ul>
+        </div>
+
+        <button
+          @click="searchProducts"
+          :disabled="!(selectedMake && selectedModel && selectedYear)"
+          class="bg-red-600 cursor-pointer text-white disabled:cursor-default  px-2 py-[5px] disabled:opacity-50"
+        >
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    -->
     <div class="mt-2">
       <form action="/search" method="get" class="flex items-center flex-1 bg-gray-200 h-full p-1">
         <input

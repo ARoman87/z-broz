@@ -47,7 +47,7 @@
         {% endif %}
       </div>
       <div class="md:w-[75%] w-full">
-        {% paginate collection.products by 800 %}
+        {% paginate collection.products by 250 %}
           {% if collection.products_count > 0 %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {% for product in collection.products %}
@@ -94,6 +94,7 @@
     });
   });
 </script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const sortDropdown = document.getElementById('sortDropdown');

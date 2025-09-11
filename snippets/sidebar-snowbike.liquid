@@ -6,109 +6,64 @@
     </div>
     <div class="mt-4">
       <ul class="flex flex-col divide-y divide-gray-200 text-sm text-black/70">
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Exit_Shocks"
-          >
-            EXIT Shocks
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_A_Arms"
-          >
-            A-arms
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_T_Motion_Lockout"
-          >
-            T-Motion Lockout
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Rail_Brace"
-          >
-            Rail Brace
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Kiss_Coupler"
-          >
-            Kiss Coupler
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Spring_Kits"
-          >
-            Spring Kits
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Ball_Joints"
-          >
-            Ball Joints
-          </button>
-        </li>
-        <li>
-          <button
-            class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-            data-part="part_Bumpers"
-          >
-            Bumpers
-          </button>
-        </li>
+        {% for tag in collection.all_tags %}
+          {% capture pref %}{{ tag | downcase | slice: 0,5 }}{% endcapture %}
+          {% if pref == 'part_' %}
+            {% assign label = tag | replace_first: 'part_', '' | replace: '_', ' ' | strip %}
+            <li>
+              <a
+                class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
+                href="{{ collection.url }}/{{ tag | handle }}"
+                class="capitalize"
+              >
+                {{- label -}}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
       </ul>
     </div>
   </div>
-  <div class="bg-white p-4 mt-5">
-    <div class="flex items-center justify-between text-xl font-medium">
-      <p>Snowbike Vehicles</p>
-      <i class="fa-regular fa-dash"></i>
-    </div>
-    <div class="mt-4 flex flex-col gap-2">
-      <div>
-        <ul class="flex flex-col divide-y divide-gray-200 text-sm text-black/70">
-          <li>
-            <button
-              class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-              data-part="fitment_Timbersled"
-            >
-              Timbersled
-            </button>
-          </li>
-          <li>
-            <button
-              class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-              data-part="fitment_CAMSO"
-            >
-              CAMSO
-            </button>
-          </li>
-          <li>
-            <button
-              class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
-              data-part="fitment_Fit-Kits"
-            >
-              Fit Kits
-            </button>
-          </li>
-        </ul>
+  <!--
+    <div class="bg-white p-4 mt-5">
+      <div class="flex items-center justify-between text-xl font-medium">
+        <p>Snowbike Vehicles</p>
+        <i class="fa-regular fa-dash"></i>
+      </div>
+      <div class="mt-4 flex flex-col gap-2">
+        <div>
+          <ul class="flex flex-col divide-y divide-gray-200 text-sm text-black/70">
+            <li>
+              <button
+                class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
+                data-part="fitment_Timbersled"
+              >
+                Timbersled
+              </button>
+            </li>
+            <li>
+              <button
+                class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
+                data-part="fitment_CAMSO"
+              >
+                CAMSO
+              </button>
+            </li>
+            <li>
+              <button
+                class="filter-button py-2 p-1 cursor-pointer w-full transition-all duration-300 ease-in-out flex hover:bg-gray-200"
+                data-part="fitment_Fit-Kits"
+              >
+                Fit Kits
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
+  -->
 
-  <button class="filter-button cursor-pointer p-4" data-part="">All Parts</button>
+  <div class="mt-2">
+    <a class="filter-button cursor-pointer p-4" href="{{ collection.url }}">All Parts</a>
+  </div>
 </div>
