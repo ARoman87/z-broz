@@ -77,7 +77,13 @@
               ).format(price)
             "
           ></p>
-          <p class="text-black/70 uppercase">SKU: {{ product.variants.first.sku }}</p>
+          <p
+            class="text-black/70 uppercase"
+            x-data="{ sku: '{{ product.variants.first.sku }}' }"
+            @sku:update.window="sku = $event.detail"
+          >
+            SKU: <span x-text="sku"></span>
+          </p>
         </div>
 
         <!-- COLOR SELECTOR -->
@@ -106,7 +112,7 @@
               <select
                 id="color-select"
                 x-model="selectedColor"
-                @change="updatePrice()"
+                @change="updatePrice(); updateSku();"
                 class="border bg-white cursor-pointer border-gray-300 p-2 text-sm focus:outline-none"
               >
                 <option value="" disabled selected>Select Color</option>
@@ -157,10 +163,11 @@
         {% assign has_overview = product.metafields.custom.product_details != blank %}
         {% assign has_installation = product.metafields.custom.product_installation != blank %}
         {% assign has_additional = product.metafields.custom.product_additional_information != blank %}
-        {% assign has_tabs = has_overview or has_installation or has_additional %}
+        {% assign has_video_installation = product.metafields.custom.video_installation != blank %}
+        {% assign has_tabs = has_overview or has_installation or has_additional or has_video_installation %}
         {% if has_tabs %}
           <div
-            x-data="{ tab: '{% if has_overview %}overview{% elsif has_installation %}installation{% else %}additional{% endif %}' }"
+            x-data="{ tab: '{% if has_overview %}overview{% elsif has_installation %}installation{% elsif has_video_installation %}video{% else %}additional{% endif %}' }"
             class="mt-10"
           >
             <div class="flex space-x-4 border-b border-gray-200">
@@ -193,6 +200,15 @@
                   Additional Information
                 </button>
               {% endif %}
+              {% if has_video_installation %}
+                <button
+                  @click="tab = 'video'"
+                  :class="{ 'font-bold text-primary border-b-2 border-primary': tab === 'video' }"
+                  class="pb-2 cursor-pointer"
+                >
+                  Video Installation
+                </button>
+              {% endif %}
             </div>
 
             <div class="mt-6">
@@ -222,6 +238,16 @@
                   {{ product.metafields.custom.product_additional_information | metafield_tag }}
                 </div>
               {% endif %}
+
+              {% if has_video_installation %}
+                <div x-show="tab === 'video'" class="prose max-w-none text-black text-sm!">
+                  <div
+                    class="[&_iframe]:w-full"
+                  >
+                    {{ product.metafields.custom.video_installation.value }}
+                  </div>
+                </div>
+              {% endif %}
             </div>
           </div>
         {% endif %}
@@ -242,7 +268,7 @@
       imageCount: 0,
       init() {
         try {
-          this.images = eval(this.$root.dataset.images); // because it's not strict JSON
+          this.images = eval(this.$root.dataset.images);
           this.imageCount = parseInt(this.$root.dataset.imageCount);
         } catch (e) {
           console.error('Failed to load product images', e);
@@ -275,6 +301,7 @@
           const lowestVariant = sortedVariants[0];
           this.selectedColor = lowestVariant.option1;
           this.updatePrice();
+          this.updateSku(); // Add this line to update SKU on init
         } else {
           this.selectedPrice = this.product.variants[0].price;
         }
@@ -325,10 +352,18 @@
         if (!this.requiresColor) return this.product.variants[0];
         return this.product.variants.find((v) => v.option1 === this.selectedColor);
       },
+
       updatePrice() {
         const variant = this.getVariant();
         this.selectedPrice = variant ? variant.price : this.product.variants[0].price;
         window.dispatchEvent(new CustomEvent('price:update', { detail: this.selectedPrice }));
+      },
+
+      // Add this new method to update SKU
+      updateSku() {
+        const variant = this.getVariant();
+        const sku = variant ? variant.sku : this.product.variants[0].sku;
+        window.dispatchEvent(new CustomEvent('sku:update', { detail: sku || 'N/A' }));
       }
     };
   }
