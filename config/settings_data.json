@@ -33,6 +33,58 @@
       "keep-with-us": {
         "type": "keep-with-us",
         "settings": {}
+      },
+      "navbar": {
+        "type": "navbar",
+        "settings": {}
+      },
+      "featured-categories": {
+        "type": "featured-categories",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      },
+      "faq": {
+        "type": "faq",
+        "blocks": {
+          "faq_9nTJBx": {
+            "type": "faq",
+            "settings": {
+              "question": "Question",
+              "answer": "Answer"
+            }
+          },
+          "faq_yK8QpV": {
+            "type": "faq",
+            "settings": {
+              "question": "Question",
+              "answer": "Answer"
+            }
+          },
+          "faq_ppi8Bq": {
+            "type": "faq",
+            "settings": {
+              "question": "Question",
+              "answer": "Answer"
+            }
+          },
+          "faq_RWFKec": {
+            "type": "faq",
+            "settings": {
+              "question": "Another Question",
+              "answer": "Another Answer"
+            }
+          }
+        },
+        "block_order": [
+          "faq_9nTJBx",
+          "faq_yK8QpV",
+          "faq_ppi8Bq",
+          "faq_RWFKec"
+        ],
+        "settings": {}
       }
     },
     "content_for_index": [],
@@ -40,11 +92,6 @@
       "1232542678405107163": {
         "type": "shopify://apps/instafeed/blocks/head-block/c447db20-095d-4a10-9725-b5977662c9d5",
         "disabled": false,
-        "settings": {}
-      },
-      "13305437469741356523": {
-        "type": "shopify://apps/gsc-instagram-feed/blocks/embed/96970b1b-b770-454f-b16b-51f47e1aa4ed",
-        "disabled": true,
         "settings": {}
       }
     }
