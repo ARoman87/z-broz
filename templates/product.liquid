@@ -167,10 +167,19 @@
         {% assign has_tabs = has_overview or has_installation or has_additional or has_video_installation %}
         {% if has_tabs %}
           <div
-            x-data="{ tab: '{% if has_overview %}overview{% elsif has_installation %}installation{% elsif has_video_installation %}video{% else %}additional{% endif %}' }"
+            x-data="{ tab: '{% if  has_video_installation %}video{% elsif has_overview %}overview{% elsif has_installation %}installation{% else %}additional{% endif %}' }"
             class="mt-10"
           >
             <div class="flex space-x-4 border-b border-gray-200">
+              {% if has_video_installation %}
+                <button
+                  @click="tab = 'video'"
+                  :class="{ 'font-bold text-primary border-b-2 border-primary': tab === 'video' }"
+                  class="pb-2 cursor-pointer"
+                >
+                  Video
+                </button>
+              {% endif %}
               {% if has_overview %}
                 <button
                   @click="tab = 'overview'"
@@ -198,15 +207,6 @@
                   class="pb-2 cursor-pointer"
                 >
                   Additional Information
-                </button>
-              {% endif %}
-              {% if has_video_installation %}
-                <button
-                  @click="tab = 'video'"
-                  :class="{ 'font-bold text-primary border-b-2 border-primary': tab === 'video' }"
-                  class="pb-2 cursor-pointer"
-                >
-                  Video Installation
                 </button>
               {% endif %}
             </div>

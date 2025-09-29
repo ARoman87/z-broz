@@ -47,7 +47,7 @@
         {% endif %}
       </div>
       <div class="md:w-[75%] w-full">
-        {% paginate collection.products by 250 %}
+        {% paginate collection.products by 21 %}
           {% if collection.products_count > 0 %}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {% for product in collection.products %}
@@ -63,10 +63,76 @@
                 {% endunless %}
               {% endfor %}
             </div>
+            <!-- Pager -->
+            <div class="mt-10 flex justify-center">
+              {% if paginate.pages > 1 %}
+                <nav class="flex items-center gap-2 text-sm">
+                  {% if paginate.previous %}
+                    <a
+                      href="{{ paginate.previous.url }}"
+                      class="px-3 py-1 border border-black/20 bg-white rounded hover:bg-gray-100"
+                      >&lt;</a
+                    >
+                  {% else %}
+                    <span class="px-3 py-1 border border-black/10 bg-gray-100 rounded opacity-50">&lt;</span>
+                  {% endif %}
+
+                  {% for part in paginate.parts %}
+                    {% if part.is_link %}
+                      <a
+                        href="{{ part.url }}"
+                        class="px-3 py-1 border border-black/20 bg-white rounded hover:bg-gray-100"
+                      >
+                        {{- part.title -}}
+                      </a>
+                    {% else %}
+                      {% if part.title == paginate.current_page %}
+                        <span
+                          aria-current="page"
+                          class="px-3 py-1 bg-black text-white rounded border border-black/20"
+                        >
+                          {{- part.title -}}
+                        </span>
+                      {% else %}
+                        <span class="px-3 py-1">{{ part.title }}</span>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if paginate.next %}
+                    <a
+                      href="{{ paginate.next.url }}"
+                      class="px-3 py-1 border border-black/20 bg-white rounded hover:bg-gray-100"
+                      >&gt;</a
+                    >
+                  {% else %}
+                    <span class="px-3 py-1 border border-black/10 bg-gray-100 rounded opacity-50">&gt;</span>
+                  {% endif %}
+                </nav>
+              {% endif %}
+            </div>
           {% else %}
             <p>No products found in this collection.</p>
           {% endif %}
         {% endpaginate %}
+        <!-- JavaScript-based pagination -->
+        <div id="js-pagination" class="mt-10 flex justify-center gap-4" style="display: none;">
+          <nav class="flex justify-center text-sm gap-2">
+            <button
+              id="prev-page"
+              class="px-3 py-1 border border-black/20 bg-white rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              &lt;
+            </button>
+            <div id="page-numbers" class="flex gap-2"></div>
+            <button
+              id="next-page"
+              class="px-3 py-1 border border-black/20 bg-white rounded hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              &gt;
+            </button>
+          </nav>
+        </div>
       </div>
     </div>
   </section>

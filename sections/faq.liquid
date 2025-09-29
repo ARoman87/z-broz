@@ -1,0 +1,97 @@
+<div class="mt-[52px] md:mt-[54px] lg:mt-[66px]">
+  <div class=" relative lg:py-60 md:py-45 sm:py-30 py-20">
+    <div class="container h-full">
+      <div class="">
+        <div class="bg-white rounded-2xl md:px-8 px-4 md:py-16 py-8">
+          <div class="text-center md:w-2/3 mx-auto">
+            <h1 class="text-xl sm:text-[27px] md:text-[34px] lg:text-[40px] tracking-tight font-bold md:mb-10 mb-5 leading-[110%]">
+              FAQ's
+            </h1>
+          </div>
+
+          <div class="text-[#1A1A1A] text-md md:text-[24px] pb-6 border-gray-300 border-b-1">
+            <div class="flex flex-col gap-6" x-data="{ openIndex: null }">
+              {% for block in section.blocks %}
+                <div>
+                  <div class="{% unless forloop.first %} border-gray-300 border-t-1 pt-4{% endunless %}">
+                    <button
+                      class="w-full flex justify-between items-center text-left cursor-pointer"
+                      @click="openIndex === {{ forloop.index0 }} ? openIndex = null : openIndex = {{ forloop.index0 }}"
+                    >
+                      <div class="flex items-center gap-2">
+                        <div>
+                          <span class="text-sm md:text-[24px] font-bold leading-[150%] pr-4">{{ block.settings.question }}</span>
+                        </div>
+                      </div>
+                      <span class="w-6 h-6 flex items-center justify-center bg-white">
+                        <i
+                          class="fa-solid fa-plus text-[#1A1A1A] text-xl transition-transform duration-300"
+                          :class="{ 'rotate-45': openIndex === {{ forloop.index0 }} }"
+                        ></i>
+                      </span>
+                    </button>
+                    <div class="w-full flex justify-between items-center">
+                      <div class="">
+                        <div
+                          x-show="openIndex === {{ forloop.index0 }}"
+                          x-transition:enter="transition-all ease-in-out duration-300"
+                          x-transition:enter-start="opacity-0 max-h-0"
+                          x-transition:enter-end="opacity-100 max-h-[300px]"
+                          x-transition:leave="transition-all ease-in-out duration-300"
+                          x-transition:leave-start="opacity-100 max-h-[300px]"
+                          x-transition:leave-end="opacity-0 max-h-0"
+                          class="overflow-hidden text-xs md:text-base font-medium mt-3 leading-[150%] text-black/60"
+                        >
+                          {{ block.settings.answer }}
+                        </div>
+                      </div>
+                      <div class="w-[30px]"></div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="py-10 md:py-20 lg:py-30 bg-white">
+    {% render 'support' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ Section",
+  "tag": "section",
+  "class": "faq-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "FAQ Section",
+      "category": "Content"
+    }
+  ]
+}
+{% endschema %}

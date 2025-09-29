@@ -83,3 +83,11 @@ html {
 .prose a {
   @apply text-primary hover:text-primary/80;
 }
+
+.shopify-policy__container {
+  @apply max-w-5xl pt-32 pb-10 md:pt-50 md:pb-20;
+}
+
+.shopify-policy__title h1 {
+  @apply mb-4 text-3xl font-bold text-[#1A1A1A] sm:mb-10 lg:text-5xl;
+}
